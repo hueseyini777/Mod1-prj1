@@ -17,15 +17,48 @@ By the end of this repository, you should be able to:
 | File / Folder | Description |
 |---|---|
 | [**Project Brief**](project-for-today.md) | The assignment tasks and stretch goals. |
-| [**King County Notebook**](King-County.ipynb) | The original notebook: EDA, cleaning, feature engineering, and modeling for King County house prices. |
+| [**Reflection**](REFLECTION.md) | Answers to the brief's "what did you do / what was hard / what next" questions. |
+| [**King County Notebook**](King-County.ipynb) | EDA, plus cleaning/feature engineering/modeling calls delegated to `src/house_pipeline/`. |
+
+### Refactored Pipeline
+
+| File / Folder | Description |
+|---|---|
+| [**src/house_pipeline**](src/house_pipeline/) | The reusable package: `cleaning.py`, `features.py`, `pipeline.py` (composes both), and `modeling.py` (baseline + tuned ElasticNet, save/load). |
+| [**scripts**](scripts/) | CLI entry points: `build_dataset.py` writes the cleaned/engineered CSV, `train_model.py` trains and saves the model. |
+| [**tests**](tests/) | Unit tests for cleaning/features/modeling and an integration test that runs the pipeline against the real dataset. |
+
+Run the pipeline and training end to end:
+
+```bash
+uv run python scripts/build_dataset.py   # -> data/king_county_processed.csv
+uv run python scripts/train_model.py     # -> model/model.bin
+uv run pytest
+```
+
+### Houses CRUD API (Stretch Goal)
+
+| File / Folder | Description |
+|---|---|
+| [**api**](api/) | FastAPI CRUD app for houses (5 features: `bedrooms`, `bathrooms`, `sqft_living`, `grade`, `zipcode`), backed by Postgres via SQLAlchemy. |
+| [**Dockerfile**](Dockerfile) / [**docker-compose.yaml**](docker-compose.yaml) | Container image for the API and a compose stack that runs it alongside Postgres. |
+| [**.env.example**](.env.example) | Environment variables used by `docker-compose.yaml` and by `api/database.py` when run outside Docker. |
+
+Run it with Docker Compose:
+
+```bash
+cp .env.example .env
+docker compose up --build --wait
+# open http://localhost:8000/docs
+```
 
 ### Additional Folders and Files
 
 | File / Folder | Description |
 |---|---|
-| [**data**](data/) | The King County house price dataset used by the notebook. |
+| [**data**](data/) | The King County house price dataset used by the pipeline. |
 | [**assets**](assets/) | Visual aids referenced in the notebook. |
-| [**bonus_solution**](bonus_solution/) | A FastAPI + Postgres + Docker reference implementation for the optional CRUD stretch goal. |
+| [**bonus_solution**](bonus_solution/) | The original FastAPI + Postgres + Docker reference implementation this project's `api/` is modeled on. |
 | [**pyproject.toml**](pyproject.toml) | Project configuration and dependencies. |
 | [**uv.lock**](uv.lock) | Dependency lock file. |
 

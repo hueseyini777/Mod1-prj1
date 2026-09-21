@@ -171,3 +171,6 @@ Thumbs.db
 
 # Model files
 model/
+
+# Generated pipeline output
+data/king_county_processed.csv
